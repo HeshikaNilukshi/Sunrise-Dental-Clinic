@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Registration | Sunrise Dental Clinic</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4 antialiased font-sans">
+
+    <div class="max-w-md w-full">
+        <!-- Logo & Header -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-teal-600 to-emerald-500 text-white shadow-lg shadow-teal-500/25 mb-4">
+                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C7.58 2 4 4.5 4 8c0 2.22 1.45 4.17 3.5 5.5.85.55 1.5 1.7 1.5 3v3.5c0 1.1.9 2 2 2s2-.9 2-2V18c0-.66.34-1.28.9-1.63 1.34-.84 2.1-2.4 2.1-4.37 0-3.5-3.58-6-8-6z"/>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Staff Registration</h1>
+            <p class="text-sm text-slate-500 mt-1">Create an authorized user account for clinic staff</p>
+        </div>
+
+        <!-- Registration Card -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-8">
+            <form action="#" method="get" class="space-y-4">
+                <!-- Full Name -->
+                <div>
+                    <label for="fullName" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="e.g. Kasun Perera" required
+                           class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 focus:bg-white transition-all">
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Official Email</label>
+                    <input type="email" id="email" name="email" placeholder="k.perera@sunrisedental.com" required
+                           class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 focus:bg-white transition-all">
+                </div>
+
+                <!-- Role -->
+                <div>
+                    <label for="role" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Role / Designation</label>
+                    <select id="role" name="role" class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 focus:bg-white transition-all">
+                        <option value="RECEPTIONIST">Receptionist / Front Desk</option>
+                        <option value="ADMIN">Clinic Administrator</option>
+                        <option value="DENTIST">Dental Practitioner</option>
+                    </select>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Password</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required
+                           class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 focus:bg-white transition-all">
+                </div>
+
+                <!-- Confirm Password -->
+                <div>
+                    <label for="confirmPassword" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••" required
+                           class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 focus:bg-white transition-all">
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-md shadow-teal-600/20 transition-all flex items-center justify-center gap-2">
+                        <span>Register Staff Account</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Login Link -->
+            <div class="mt-6 pt-5 border-t border-slate-100 text-center">
+                <p class="text-xs text-slate-500">
+                    Already have an account? 
+                    <a th:href="@{/login}" class="font-bold text-teal-600 hover:text-teal-700 ml-1">Sign in here</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Back to Dashboard -->
+        <div class="text-center mt-6">
+            <a th:href="@{/}" class="text-xs font-semibold text-slate-500 hover:text-teal-600 inline-flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Return to Clinic Dashboard
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

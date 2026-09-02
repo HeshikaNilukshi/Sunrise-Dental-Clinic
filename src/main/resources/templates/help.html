@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: main('Help & System Guide', 'help', ~{::content})}">
+<head>
+    <title>Help & System Guide</title>
+</head>
+<body>
+<div th:fragment="content" class="space-y-6 max-w-5xl mx-auto">
+
+    <!-- Header Banner -->
+    <div class="bg-white rounded-2xl p-6 md:p-8 border border-slate-200/80 shadow-xs">
+        <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center flex-shrink-0">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold text-slate-900">Staff User Guide & Documentation</h1>
+                <p class="text-sm text-slate-500 mt-1">
+                    Step-by-step instructions for clinic receptionists and administrators on managing appointments, patients, and billing workflows in Sunrise Dental Clinic.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Workflow Steps (Visual Cards) -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs">
+            <span class="w-7 h-7 rounded-lg bg-teal-600 text-white font-bold text-xs flex items-center justify-center mb-2">1</span>
+            <h4 class="text-sm font-bold text-slate-800">Register Patient</h4>
+            <p class="text-xs text-slate-500 mt-1">Capture patient name, unique contact number, email, and home address.</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs">
+            <span class="w-7 h-7 rounded-lg bg-teal-600 text-white font-bold text-xs flex items-center justify-center mb-2">2</span>
+            <h4 class="text-sm font-bold text-slate-800">Book Appointment</h4>
+            <p class="text-xs text-slate-500 mt-1">Select patient, dentist, treatment type, and time. Unique APT# is generated.</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs">
+            <span class="w-7 h-7 rounded-lg bg-teal-600 text-white font-bold text-xs flex items-center justify-center mb-2">3</span>
+            <h4 class="text-sm font-bold text-slate-800">Complete Visit</h4>
+            <p class="text-xs text-slate-500 mt-1">Mark appointment completed once consultation or dental procedure is done.</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs">
+            <span class="w-7 h-7 rounded-lg bg-teal-600 text-white font-bold text-xs flex items-center justify-center mb-2">4</span>
+            <h4 class="text-sm font-bold text-slate-800">Bill & Receipt</h4>
+            <p class="text-xs text-slate-500 mt-1">Auto-calculate fees (Treatment + LKR 500 Consultation), print invoice, and mark paid.</p>
+        </div>
+    </div>
+
+    <!-- Detailed Instruction Accordions / Sections -->
+    <div class="space-y-4">
+        
+        <!-- Module 1: Patient Management -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center font-bold text-sm">
+                    A
+                </div>
+                <h3 class="text-base font-bold text-slate-900">1. Patient Registration & Search</h3>
+            </div>
+            <div class="text-sm text-slate-600 space-y-2 pl-11">
+                <p><strong>Adding New Patients:</strong> Navigate to <a th:href="@{/patients/new}" class="text-teal-600 underline font-medium">Patients &rarr; New Patient</a>. Fill in the full name, contact number, email, and home address. Each contact number must be unique in the system.</p>
+                <p><strong>Patient Search:</strong> You can search for registered patients by name or contact number on the Patients directory page.</p>
+                <p><strong>Patient History:</strong> Click on any patient to view their complete history of past and upcoming appointments.</p>
+            </div>
+        </div>
+
+        <!-- Module 2: Appointment Management -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-sm">
+                    B
+                </div>
+                <h3 class="text-base font-bold text-slate-900">2. Appointment Scheduling & Double-Booking Prevention</h3>
+            </div>
+            <div class="text-sm text-slate-600 space-y-2 pl-11">
+                <p><strong>Booking a Slot:</strong> Go to <a th:href="@{/appointments/new}" class="text-teal-600 underline font-medium">Appointments &rarr; New Appointment</a>. Select the patient, dentist, treatment type, date, and time slot.</p>
+                <p><strong>Unique Numbering:</strong> The system automatically generates a unique tracking number format: <code class="bg-slate-100 px-1.5 py-0.5 rounded text-xs font-mono text-teal-700">APT-YYYYMMDD-NNN</code> (e.g., APT-20260902-001).</p>
+                <p><strong>Double-Booking Prevention:</strong> The system validates dentist availability in real-time and will prevent booking if the selected dentist already has an active appointment at that same date and time.</p>
+                <p><strong>Cancellation:</strong> Appointments can be cancelled with one click, which frees the time slot and dispatches an alert email to the patient.</p>
+            </div>
+        </div>
+
+        <!-- Module 3: Search & Lookup -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">
+                    C
+                </div>
+                <h3 class="text-base font-bold text-slate-900">3. Quick Search by Appointment Number</h3>
+            </div>
+            <div class="text-sm text-slate-600 space-y-2 pl-11">
+                <p>Staff can instantly look up any booking using the <a th:href="@{/appointments/search}" class="text-teal-600 underline font-medium">Search Tool</a> or the quick search bar in the top navigation/dashboard.</p>
+                <p>Entering a valid appointment number (e.g., <code class="bg-slate-100 px-1.5 py-0.5 rounded text-xs font-mono text-teal-700">APT-20260902-001</code>) navigates directly to the appointment details page.</p>
+            </div>
+        </div>
+
+        <!-- Module 4: Billing & Invoicing -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-sm">
+                    D
+                </div>
+                <h3 class="text-base font-bold text-slate-900">4. Billing, Fee Calculation & Print Invoices</h3>
+            </div>
+            <div class="text-sm text-slate-600 space-y-2 pl-11">
+                <p><strong>Fee Structure:</strong> Every invoice automatically calculates: <br>
+                   <code class="bg-slate-100 px-2 py-1 rounded text-xs text-slate-800 font-mono inline-block my-1">Total Bill = Base Treatment Fee + Consultation Fee (LKR 500.00)</code>
+                </p>
+                <p><strong>Invoice Generation:</strong> Once an appointment is marked COMPLETED, click "Generate Invoice". The system creates an invoice number formatted as <code class="bg-slate-100 px-1.5 py-0.5 rounded text-xs font-mono text-teal-700">INV-YYYYMMDD-NNN</code>.</p>
+                <p><strong>Printing Receipts:</strong> The invoice detail view includes a dedicated <strong>"Print Invoice"</strong> button that formats a clean A4 receipt without the sidebar or UI controls.</p>
+                <p><strong>Payment Settlement:</strong> Click "Mark as Paid" when the patient settles the bill. A payment confirmation receipt email will be automatically sent to the patient.</p>
+            </div>
+        </div>
+
+        <!-- Module 5: Email Automation -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">
+                    E
+                </div>
+                <h3 class="text-base font-bold text-slate-900">5. Automated Email Notifications</h3>
+            </div>
+            <div class="text-sm text-slate-600 space-y-2 pl-11">
+                <p>The system is integrated with the Resend API to deliver asynchronous transactional emails:</p>
+                <ul class="list-disc list-inside space-y-1 text-slate-500">
+                    <li>Booking Confirmation sent immediately upon scheduling</li>
+                    <li>Cancellation Notice sent when an appointment is revoked</li>
+                    <li>Payment Receipt email sent upon invoice payment settlement</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

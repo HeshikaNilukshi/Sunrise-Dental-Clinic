@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: main('Appointments Schedule', 'appointments', ~{::content})}">
+<head>
+    <title>Appointments Schedule</title>
+</head>
+<body>
+<div th:fragment="content" class="space-y-6">
+
+    <!-- Header & Action Row -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900">Appointments Schedule</h1>
+            <p class="text-xs text-slate-500 mt-1">Manage patient visits, check doctor calendars, and track consultation statuses</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a th:href="@{/appointments/search}" class="btn-secondary text-xs">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <span>Search by APT#</span>
+            </a>
+            <a th:href="@{/appointments/new}" class="btn-primary text-xs">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                <span>Book Appointment</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Date Filter Bar -->
+    <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <form th:action="@{/appointments}" method="get" class="flex flex-wrap items-center gap-3">
+            <label for="date" class="text-xs font-bold text-slate-600 uppercase tracking-wider">Filter by Date:</label>
+            <input type="date" id="date" name="date" th:value="${selectedDate}"
+                   class="px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 focus:bg-white transition-all font-mono">
+            <button type="submit" class="btn-primary text-xs py-1.5 px-3">
+                Apply Date
+            </button>
+            <a th:href="@{/appointments(date=${today})}" class="btn-secondary text-xs py-1.5 px-3">
+                Today
+            </a>
+        </form>
+        <div class="text-xs text-slate-500 font-medium">
+            Showing <span class="font-bold text-slate-800" th:text="${#lists.size(appointments)}">0</span> appointments for 
+            <span class="font-semibold text-teal-700" th:text="${#temporals.format(selectedDate, 'MMMM d, yyyy')}">Date</span>
+        </div>
+    </div>
+
+    <!-- Appointments Table Card -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div class="overflow-x-auto">
+            <table th:if="${not #lists.isEmpty(appointments)}" class="w-full text-left text-sm">
+                <thead class="bg-slate-50/80 text-xs font-semibold text-slate-500 uppercase border-b border-slate-100">
+                    <tr>
+                        <th class="py-3.5 px-4">Time</th>
+                        <th class="py-3.5 px-4">Appt #</th>
+                        <th class="py-3.5 px-4">Patient</th>
+                        <th class="py-3.5 px-4">Dentist</th>
+                        <th class="py-3.5 px-4">Treatment</th>
+                        <th class="py-3.5 px-4">Fee</th>
+                        <th class="py-3.5 px-4">Status</th>
+                        <th class="py-3.5 px-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-slate-700">
+                    <tr th:each="apt : ${appointments}" class="hover:bg-slate-50/70 transition-colors">
+                        <td class="py-3.5 px-4 font-bold text-slate-900 whitespace-nowrap">
+                            <span th:text="${#temporals.format(apt.appointmentTime, 'hh:mm a')}">09:00 AM</span>
+                        </td>
+                        <td class="py-3.5 px-4 font-mono text-xs font-bold text-teal-700 whitespace-nowrap" th:text="${apt.appointmentNumber}">APT-20260902-001</td>
+                        <td class="py-3.5 px-4 whitespace-nowrap">
+                            <a th:href="@{'/patients/' + ${apt.patientId}}" class="font-semibold text-slate-900 hover:text-teal-600">
+                                <span th:text="${apt.patientName}">Kasun Perera</span>
+                            </a>
+                            <p class="text-[11px] text-slate-400 font-mono" th:text="${apt.patientContact}">0771234567</p>
+                        </td>
+                        <td class="py-3.5 px-4 whitespace-nowrap">
+                            <p class="font-medium text-slate-800" th:text="${apt.dentistName}">Dr. Silva</p>
+                            <p class="text-[11px] text-slate-400" th:text="${apt.dentistSpecialization}">Orthodontics</p>
+                        </td>
+                        <td class="py-3.5 px-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-800"
+                                  th:text="${apt.treatmentType}">CLEANING</span>
+                        </td>
+                        <td class="py-3.5 px-4 font-semibold text-slate-900 whitespace-nowrap"
+                            th:text="'LKR ' + ${#numbers.formatDecimal(apt.totalCost, 1, 'COMMA', 2, 'POINT')}">3,500.00</td>
+                        <td class="py-3.5 px-4 whitespace-nowrap">
+                            <span th:if="${apt.status.name() == 'SCHEDULED'}" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-scheduled">Scheduled</span>
+                            <span th:if="${apt.status.name() == 'COMPLETED'}" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-completed">Completed</span>
+                            <span th:if="${apt.status.name() == 'CANCELLED'}" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-cancelled">Cancelled</span>
+                        </td>
+                        <td class="py-3.5 px-4 text-right whitespace-nowrap">
+                            <div class="flex items-center justify-end gap-1.5">
+                                <a th:href="@{'/appointments/' + ${apt.appointmentNumber}}" 
+                                   class="text-xs font-semibold text-teal-700 hover:text-teal-900 bg-teal-50 hover:bg-teal-100 px-2.5 py-1.5 rounded-lg transition-colors">
+                                    Details
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div th:if="${#lists.isEmpty(appointments)}" class="p-12 text-center flex flex-col items-center justify-center">
+                <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mb-3">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <h4 class="text-sm font-bold text-slate-800">No Appointments on this Date</h4>
+                <p class="text-xs text-slate-500 mt-1 max-w-sm">
+                    There are no scheduled dental visits for the selected date. Choose another date or schedule a new appointment.
+                </p>
+                <a th:href="@{/appointments/new}" class="mt-4 btn-primary text-xs">
+                    + Schedule Appointment
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

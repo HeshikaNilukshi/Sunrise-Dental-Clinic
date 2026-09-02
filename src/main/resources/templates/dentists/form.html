@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: main('Add Dentist', 'dentists', ~{::content})}">
+<head>
+    <title>Add Dentist</title>
+</head>
+<body>
+<div th:fragment="content" class="max-w-2xl mx-auto space-y-6">
+
+    <!-- Page Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900">Add Dental Practitioner</h1>
+            <p class="text-xs text-slate-500 mt-1">Register a dentist to the clinic availability roster</p>
+        </div>
+        <a th:href="@{/dentists}" class="btn-secondary text-xs">
+            &larr; Back to Roster
+        </a>
+    </div>
+
+    <!-- Dentist Form Card -->
+    <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
+        <form th:action="@{/dentists}" th:object="${dentistRequest}" method="post" class="space-y-5">
+            
+            <!-- Full Name -->
+            <div>
+                <label for="fullName" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Full Name (with Title) <span class="text-rose-500">*</span>
+                </label>
+                <input type="text" id="fullName" th:field="*{fullName}" placeholder="e.g. Dr. Kasun Silva" required
+                       th:classappend="${#fields.hasErrors('fullName') ? 'border-rose-400 bg-rose-50/50' : 'border-slate-200 bg-slate-50'}"
+                       class="w-full px-4 py-2.5 text-sm rounded-xl border focus:outline-none focus:border-teal-500 focus:bg-white transition-all">
+                <p th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="text-xs text-rose-600 mt-1.5 font-medium"></p>
+            </div>
+
+            <!-- Specialization -->
+            <div>
+                <label for="specialization" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Specialization / Department <span class="text-rose-500">*</span>
+                </label>
+                <input type="text" id="specialization" th:field="*{specialization}" placeholder="e.g. Orthodontics, Endodontics, General Dentistry" required
+                       th:classappend="${#fields.hasErrors('specialization') ? 'border-rose-400 bg-rose-50/50' : 'border-slate-200 bg-slate-50'}"
+                       class="w-full px-4 py-2.5 text-sm rounded-xl border focus:outline-none focus:border-teal-500 focus:bg-white transition-all">
+                <p th:if="${#fields.hasErrors('specialization')}" th:errors="*{specialization}" class="text-xs text-rose-600 mt-1.5 font-medium"></p>
+            </div>
+
+            <!-- Phone & Email Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Phone -->
+                <div>
+                    <label for="phone" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Phone Number <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" id="phone" th:field="*{phone}" placeholder="e.g. 0771234567" required
+                           th:classappend="${#fields.hasErrors('phone') ? 'border-rose-400 bg-rose-50/50' : 'border-slate-200 bg-slate-50'}"
+                           class="w-full px-4 py-2.5 text-sm rounded-xl border focus:outline-none focus:border-teal-500 focus:bg-white transition-all font-mono">
+                    <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="text-xs text-rose-600 mt-1.5 font-medium"></p>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Official Email
+                    </label>
+                    <input type="email" id="email" th:field="*{email}" placeholder="dr.silva@sunrisedental.com"
+                           th:classappend="${#fields.hasErrors('email') ? 'border-rose-400 bg-rose-50/50' : 'border-slate-200 bg-slate-50'}"
+                           class="w-full px-4 py-2.5 text-sm rounded-xl border focus:outline-none focus:border-teal-500 focus:bg-white transition-all">
+                    <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-xs text-rose-600 mt-1.5 font-medium"></p>
+                </div>
+            </div>
+
+            <!-- Active Status Checkbox -->
+            <div class="pt-2">
+                <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                    <input type="checkbox" th:field="*{active}" class="w-4 h-4 text-teal-600 border-slate-300 rounded focus:ring-teal-500">
+                    <div>
+                        <p class="text-xs font-bold text-slate-800">Active Practitioner</p>
+                        <p class="text-[11px] text-slate-500">Make dentist available for immediate patient appointments</p>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Actions Row -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                <a th:href="@{/dentists}" class="btn-secondary text-xs">
+                    Cancel
+                </a>
+                <button type="submit" class="btn-primary text-xs">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span>Save Dentist</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>
