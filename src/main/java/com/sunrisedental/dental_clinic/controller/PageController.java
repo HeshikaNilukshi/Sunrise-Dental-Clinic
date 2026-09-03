@@ -24,6 +24,8 @@ import com.sunrisedental.dental_clinic.dto.DentistRequest;
 import com.sunrisedental.dental_clinic.dto.PatientRequest;
 import com.sunrisedental.dental_clinic.exception.DuplicateBookingException;
 import com.sunrisedental.dental_clinic.exception.DuplicateResourceException;
+import com.sunrisedental.dental_clinic.dto.RegisterRequest;
+import com.sunrisedental.dental_clinic.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.BindingResult;
@@ -40,15 +42,18 @@ public class PageController {
     private final DentistService dentistService;
     private final AppointmentService appointmentService;
     private final BillingService billingService;
+    private final UserService userService;
 
     public PageController(PatientService patientService,
                           DentistService dentistService,
                           AppointmentService appointmentService,
-                          BillingService billingService) {
+                          BillingService billingService,
+                          UserService userService) {
         this.patientService = patientService;
         this.dentistService = dentistService;
         this.appointmentService = appointmentService;
         this.billingService = billingService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -87,13 +92,55 @@ public class PageController {
     }
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(@RequestParam(required = false) String error,
+                            @RequestParam(required = false) String logout,
+                            @RequestParam(required = false) String registered,
+                            Model model) {
+        if (error != null) {
+            model.addAttribute("loginError", "Invalid email or password. Please try again.");
+        }
+        if (logout != null) {
+            model.addAttribute("logoutMessage", "You have been successfully signed out.");
+        }
+        if (registered != null) {
+            model.addAttribute("successMessage", "Account created successfully! Please sign in.");
+        }
         return "auth/login";
     }
 
     @GetMapping("/register")
-    public String registerPage() {
+    public String registerPage(Model model) {
+        if (!model.containsAttribute("registerRequest")) {
+            model.addAttribute("registerRequest", new RegisterRequest());
+        }
         return "auth/register";
+    }
+
+    @PostMapping("/register")
+    public String handleRegister(@Valid @ModelAttribute("registerRequest") RegisterRequest registerRequest,
+                                 BindingResult bindingResult,
+                                 Model model,
+                                 RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "auth/register";
+        }
+
+        if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "error.registerRequest", "Passwords do not match");
+            return "auth/register";
+        }
+
+        try {
+            userService.registerUser(registerRequest);
+            redirectAttributes.addFlashAttribute("successMessage", "Staff account registered successfully! Please sign in.");
+            return "redirect:/login?registered=true";
+        } catch (DuplicateResourceException e) {
+            bindingResult.rejectValue("email", "error.registerRequest", e.getMessage());
+            return "auth/register";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Failed to register account: " + e.getMessage());
+            return "auth/register";
+        }
     }
 
     @GetMapping("/help")
