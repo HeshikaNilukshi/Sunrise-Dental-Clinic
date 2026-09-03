@@ -73,9 +73,9 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new com.sunrisedental.dental_clinic.exception.ResourceNotFoundException("Staff not found with id: " + id));
 
-        // Security check: Only the owner admin can update their own admin account.
-        if (user.getRole() == UserRole.ADMIN && !user.getEmail().equalsIgnoreCase(currentUsername)) {
-            throw new org.springframework.security.access.AccessDeniedException("You cannot modify another Admin's account.");
+        // Security check: Users can only update their own account details.
+        if (!user.getEmail().equalsIgnoreCase(currentUsername)) {
+            throw new org.springframework.security.access.AccessDeniedException("You can only update your own account details.");
         }
 
         String normalizedEmail = request.getEmail().trim().toLowerCase();
@@ -86,12 +86,14 @@ public class UserService {
         user.setFullName(request.getFullName().trim());
         user.setEmail(normalizedEmail);
         
-        // Prevent an admin from demoting themselves by accident, or updating another's role
-        if (user.getRole() == UserRole.ADMIN && request.getRole() != UserRole.ADMIN) {
+        // Prevent an admin from demoting themselves by accident
+        if (user.getRole() == UserRole.ADMIN && request.getRole() != null && request.getRole() != UserRole.ADMIN) {
              throw new IllegalArgumentException("Admin role cannot be changed.");
         }
         
-        user.setRole(request.getRole());
+        if (request.getRole() != null) {
+            user.setRole(request.getRole());
+        }
 
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
             if (!request.getPassword().equals(request.getConfirmPassword())) {

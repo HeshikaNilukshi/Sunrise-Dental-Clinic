@@ -117,7 +117,7 @@ public class EmailService {
 
     private String buildBookingConfirmationHtml(AppointmentResponse apt) {
         return "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;'>"
-                + "<h2 style='color: #0284c7; margin-top: 0;'>Sunrise Dental Clinic</h2>"
+                + "<h2 style='color: #0d9488; margin-top: 0;'>Sunrise Dental Clinic</h2>"
                 + "<h3 style='color: #1e293b;'>Appointment Estimate</h3>"
                 + "<p>Dear <strong>" + apt.getPatientName() + "</strong>,</p>"
                 + "<p>Your dental appointment has been successfully scheduled. Details and estimate are below:</p>"
@@ -128,7 +128,7 @@ public class EmailService {
                 + "<tr><td style='padding: 8px 0; color: #64748b;'>Treatment Type:</td><td style='padding: 8px 0; font-weight: bold;'>" + apt.getTreatmentType() + "</td></tr>"
                 + "<tr><td style='padding: 8px 0; color: #64748b;'>Treatment Cost:</td><td style='padding: 8px 0; font-weight: bold;'>LKR " + apt.getTreatmentCost() + "</td></tr>"
                 + "<tr><td style='padding: 8px 0; color: #64748b;'>Consultation Fee:</td><td style='padding: 8px 0; font-weight: bold;'>LKR " + apt.getConsultationFee() + "</td></tr>"
-                + "<tr style='border-top: 2px solid #e2e8f0;'><td style='padding: 12px 0; font-weight: bold;'>Total Estimated Cost:</td><td style='padding: 12px 0; font-weight: bold; color: #0284c7;'>LKR " + apt.getTotalCost() + "</td></tr>"
+                + "<tr style='border-top: 2px solid #e2e8f0;'><td style='padding: 12px 0; font-weight: bold;'>Total Estimated Cost:</td><td style='padding: 12px 0; font-weight: bold; color: #0d9488;'>LKR " + apt.getTotalCost() + "</td></tr>"
                 + "</table>"
                 + "<p style='color: #64748b; font-size: 14px;'>Location: Sunrise Dental Clinic, Colombo, Sri Lanka</p>"
                 + "<p style='color: #94a3b8; font-size: 12px; margin-top: 24px;'>If you need to reschedule or cancel, please contact the clinic.</p>"
@@ -149,7 +149,7 @@ public class EmailService {
 
     private String buildPaymentReceiptHtml(InvoiceResponse inv) {
         return "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;'>"
-                + "<h2 style='color: #16a34a; margin-top: 0;'>Sunrise Dental Clinic</h2>"
+                + "<h2 style='color: #0d9488; margin-top: 0;'>Sunrise Dental Clinic</h2>"
                 + "<h3 style='color: #1e293b;'>Payment Receipt</h3>"
                 + "<p>Dear <strong>" + inv.getPatientName() + "</strong>,</p>"
                 + "<p>Thank you for your payment. Details of your receipt are below:</p>"
@@ -160,7 +160,7 @@ public class EmailService {
                 + "<tr><td style='padding: 8px 0; color: #64748b;'>Treatment Type:</td><td style='padding: 8px 0; font-weight: bold;'>" + inv.getTreatmentType() + "</td></tr>"
                 + "<tr><td style='padding: 8px 0; color: #64748b;'>Treatment Cost:</td><td style='padding: 8px 0; font-weight: bold;'>LKR " + inv.getTreatmentCost() + "</td></tr>"
                 + "<tr><td style='padding: 8px 0; color: #64748b;'>Consultation Fee:</td><td style='padding: 8px 0; font-weight: bold;'>LKR " + inv.getConsultationFee() + "</td></tr>"
-                + "<tr style='border-top: 2px solid #e2e8f0;'><td style='padding: 12px 0; font-weight: bold;'>Total Paid:</td><td style='padding: 12px 0; font-weight: bold; color: #16a34a;'>LKR " + inv.getTotalAmount() + "</td></tr>"
+                + "<tr style='border-top: 2px solid #e2e8f0;'><td style='padding: 12px 0; font-weight: bold;'>Total Paid:</td><td style='padding: 12px 0; font-weight: bold; color: #0d9488;'>LKR " + inv.getTotalAmount() + "</td></tr>"
                 + "</table>"
                 + "<p style='color: #64748b; font-size: 14px;'>Status: " + inv.getPaymentStatus() + "</p>"
                 + "</div>";
