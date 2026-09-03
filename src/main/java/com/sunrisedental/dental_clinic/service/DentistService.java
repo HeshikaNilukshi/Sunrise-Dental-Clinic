@@ -43,7 +43,7 @@ public class DentistService {
 
     @Transactional(readOnly = true)
     public List<DentistResponse> getActiveDentists() {
-        return dentistRepository.findByActiveTrue()
+        return dentistRepository.findByActiveTrueOrderByIdDesc()
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -64,7 +64,7 @@ public class DentistService {
 
     @Transactional(readOnly = true)
     public List<DentistResponse> getAllDentists() {
-        return dentistRepository.findAll()
+        return dentistRepository.findAllByOrderByIdDesc()
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());

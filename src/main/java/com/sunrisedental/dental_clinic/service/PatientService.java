@@ -62,7 +62,7 @@ public class PatientService {
 
     @Transactional(readOnly = true)
     public List<PatientResponse> searchByName(String name) {
-        return patientRepository.findByFullNameContainingIgnoreCase(name)
+        return patientRepository.findByFullNameContainingIgnoreCaseOrderByIdDesc(name)
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -77,7 +77,7 @@ public class PatientService {
 
     @Transactional(readOnly = true)
     public List<PatientResponse> getAllPatients() {
-        return patientRepository.findAll()
+        return patientRepository.findAllByOrderByIdDesc()
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());

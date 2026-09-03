@@ -56,7 +56,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public java.util.List<com.sunrisedental.dental_clinic.dto.StaffResponse> getAllStaff() {
-        return userRepository.findAll().stream()
+        return userRepository.findAllByOrderByIdDesc().stream()
                 .map(this::mapToResponse)
                 .collect(java.util.stream.Collectors.toList());
     }

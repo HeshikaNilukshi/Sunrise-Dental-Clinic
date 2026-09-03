@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DentistRepository extends JpaRepository<Dentist, Long> {
 
-    List<Dentist> findByActiveTrue();
+    List<Dentist> findAllByOrderByIdDesc();
+
+    List<Dentist> findByActiveTrueOrderByIdDesc();
 
     List<Dentist> findBySpecialization(String specialization);
 }

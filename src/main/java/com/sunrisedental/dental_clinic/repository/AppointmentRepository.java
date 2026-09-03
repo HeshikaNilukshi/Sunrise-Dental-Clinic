@@ -20,7 +20,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     boolean existsByDentistAndAppointmentDateAndAppointmentTimeAndStatusNot(Dentist dentist, LocalDate appointmentDate, LocalTime appointmentTime, AppointmentStatus status);
 
-    List<Appointment> findByAppointmentDate(LocalDate appointmentDate);
+    List<Appointment> findByAppointmentDateOrderByIdDesc(LocalDate appointmentDate);
+
+    List<Appointment> findAllByOrderByIdDesc();
 
     List<Appointment> findByPatient(Patient patient);
 

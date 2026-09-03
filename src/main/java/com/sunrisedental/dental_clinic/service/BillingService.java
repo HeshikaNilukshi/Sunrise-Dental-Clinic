@@ -90,7 +90,7 @@ public class BillingService {
 
     @Transactional(readOnly = true)
     public List<InvoiceResponse> getPendingInvoices() {
-        return invoiceRepository.findByPaymentStatus(PaymentStatus.PENDING)
+        return invoiceRepository.findByPaymentStatusOrderByIdDesc(PaymentStatus.PENDING)
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -98,7 +98,7 @@ public class BillingService {
 
     @Transactional(readOnly = true)
     public List<InvoiceResponse> getAllInvoices() {
-        return invoiceRepository.findAll()
+        return invoiceRepository.findAllByOrderByIdDesc()
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());

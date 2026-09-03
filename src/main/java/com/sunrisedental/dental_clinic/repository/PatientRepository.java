@@ -11,7 +11,9 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     Optional<Patient> findByContactNumber(String contactNumber);
 
-    List<Patient> findByFullNameContainingIgnoreCase(String fullName);
+    List<Patient> findAllByOrderByIdDesc();
+
+    List<Patient> findByFullNameContainingIgnoreCaseOrderByIdDesc(String fullName);
 
     boolean existsByContactNumber(String contactNumber);
 }

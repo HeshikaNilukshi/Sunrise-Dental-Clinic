@@ -93,7 +93,7 @@ public class AppointmentService {
 
     @Transactional(readOnly = true)
     public List<AppointmentResponse> getAppointmentsByDate(LocalDate date) {
-        return appointmentRepository.findByAppointmentDate(date)
+        return appointmentRepository.findByAppointmentDateOrderByIdDesc(date)
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -101,7 +101,7 @@ public class AppointmentService {
 
     @Transactional(readOnly = true)
     public List<AppointmentResponse> getAllAppointments() {
-        return appointmentRepository.findAll()
+        return appointmentRepository.findAllByOrderByIdDesc()
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
