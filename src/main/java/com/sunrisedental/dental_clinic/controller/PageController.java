@@ -153,6 +153,13 @@ public class PageController {
         return "patients/detail";
     }
 
+    @PostMapping("/patients/{id}/delete")
+    public String deletePatient(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        patientService.deletePatient(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Patient and associated records deleted successfully!");
+        return "redirect:/patients";
+    }
+
     @GetMapping("/dentists")
     public String listDentists(Model model) {
         List<DentistResponse> dentists = dentistService.getAllDentists();
@@ -179,6 +186,13 @@ public class PageController {
         }
         DentistResponse saved = dentistService.createDentist(request);
         redirectAttributes.addFlashAttribute("successMessage", "Dentist " + saved.getFullName() + " added to clinic roster!");
+        return "redirect:/dentists";
+    }
+
+    @PostMapping("/dentists/{id}/delete")
+    public String deleteDentist(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        dentistService.deleteDentist(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Dentist and associated records deleted successfully!");
         return "redirect:/dentists";
     }
 
@@ -268,6 +282,13 @@ public class PageController {
         return "redirect:/appointments/" + number;
     }
 
+    @PostMapping("/appointments/{number}/delete")
+    public String deleteAppointment(@PathVariable String number, RedirectAttributes redirectAttributes) {
+        appointmentService.deleteAppointment(number);
+        redirectAttributes.addFlashAttribute("successMessage", "Appointment " + number + " deleted successfully!");
+        return "redirect:/appointments";
+    }
+
     @GetMapping("/appointments/search")
     public String searchAppointment(@RequestParam(required = false) String appointmentNumber, Model model) {
         if (appointmentNumber != null && !appointmentNumber.trim().isEmpty()) {
@@ -355,5 +376,12 @@ public class PageController {
         InvoiceResponse invoice = billingService.markAsPaid(id);
         redirectAttributes.addFlashAttribute("successMessage", "Invoice " + invoice.getInvoiceNumber() + " marked as PAID! Receipt email sent to patient.");
         return "redirect:/invoices/" + id;
+    }
+
+    @PostMapping("/invoices/{id}/delete")
+    public String deleteInvoice(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        billingService.deleteInvoice(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Invoice deleted successfully!");
+        return "redirect:/invoices";
     }
 }

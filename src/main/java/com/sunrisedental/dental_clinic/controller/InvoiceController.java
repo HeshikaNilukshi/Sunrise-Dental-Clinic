@@ -5,6 +5,7 @@ import com.sunrisedental.dental_clinic.service.BillingService;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,12 @@ public class InvoiceController {
     @PatchMapping("/{id}/pay")
     public ResponseEntity<InvoiceResponse> markAsPaid(@PathVariable Long id) {
         return ResponseEntity.ok(billingService.markAsPaid(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteInvoice(@PathVariable Long id) {
+        billingService.deleteInvoice(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/pending")

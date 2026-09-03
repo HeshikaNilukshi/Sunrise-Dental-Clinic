@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 public class PatientRequest {
@@ -15,8 +16,10 @@ public class PatientRequest {
     private String address;
 
     @NotBlank(message = "Contact number is required")
+    @Pattern(regexp = "^\\d{10}$", message = "Phone number must be exactly 10 digits")
     private String contactNumber;
 
+    @NotBlank(message = "Email is required")
     @Email(message = "Email format is invalid")
     private String email;
 

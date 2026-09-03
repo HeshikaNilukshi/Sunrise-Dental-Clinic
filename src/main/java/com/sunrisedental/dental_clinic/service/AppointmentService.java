@@ -9,6 +9,7 @@ import com.sunrisedental.dental_clinic.model.Dentist;
 import com.sunrisedental.dental_clinic.model.Patient;
 import com.sunrisedental.dental_clinic.model.enums.AppointmentStatus;
 import com.sunrisedental.dental_clinic.repository.AppointmentRepository;
+import com.sunrisedental.dental_clinic.repository.InvoiceRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -21,15 +22,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
+    private final InvoiceRepository invoiceRepository;
     private final PatientService patientService;
     private final DentistService dentistService;
     private final EmailService emailService;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
+                              InvoiceRepository invoiceRepository,
                               PatientService patientService,
                               DentistService dentistService,
                               EmailService emailService) {
         this.appointmentRepository = appointmentRepository;
+        this.invoiceRepository = invoiceRepository;
         this.patientService = patientService;
         this.dentistService = dentistService;
         this.emailService = emailService;
@@ -119,6 +123,13 @@ public class AppointmentService {
         appointment.setStatus(AppointmentStatus.COMPLETED);
         Appointment updated = appointmentRepository.save(appointment);
         return mapToResponse(updated);
+    }
+
+    public void deleteAppointment(String appointmentNumber) {
+        Appointment appointment = appointmentRepository.findByAppointmentNumber(appointmentNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with number: " + appointmentNumber));
+        invoiceRepository.findByAppointment(appointment).ifPresent(invoiceRepository::delete);
+        appointmentRepository.delete(appointment);
     }
 
     private String generateAppointmentNumber(LocalDate date) {

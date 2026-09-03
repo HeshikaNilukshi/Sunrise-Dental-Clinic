@@ -68,6 +68,12 @@ public class BillingService {
         return response;
     }
 
+    public void deleteInvoice(Long id) {
+        Invoice invoice = invoiceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found with id: " + id));
+        invoiceRepository.delete(invoice);
+    }
+
     @Transactional(readOnly = true)
     public InvoiceResponse getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.findById(id)

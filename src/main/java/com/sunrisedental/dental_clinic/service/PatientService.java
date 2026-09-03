@@ -4,7 +4,10 @@ import com.sunrisedental.dental_clinic.dto.PatientRequest;
 import com.sunrisedental.dental_clinic.dto.PatientResponse;
 import com.sunrisedental.dental_clinic.exception.DuplicateResourceException;
 import com.sunrisedental.dental_clinic.exception.ResourceNotFoundException;
+import com.sunrisedental.dental_clinic.model.Appointment;
 import com.sunrisedental.dental_clinic.model.Patient;
+import com.sunrisedental.dental_clinic.repository.AppointmentRepository;
+import com.sunrisedental.dental_clinic.repository.InvoiceRepository;
 import com.sunrisedental.dental_clinic.repository.PatientRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,9 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class PatientService {
 
     private final PatientRepository patientRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final InvoiceRepository invoiceRepository;
 
-    public PatientService(PatientRepository patientRepository) {
+    public PatientService(PatientRepository patientRepository,
+                          AppointmentRepository appointmentRepository,
+                          InvoiceRepository invoiceRepository) {
         this.patientRepository = patientRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.invoiceRepository = invoiceRepository;
     }
 
     public PatientResponse registerPatient(PatientRequest request) {
@@ -72,6 +81,17 @@ public class PatientService {
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+    }
+
+    public void deletePatient(Long id) {
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found with id: " + id));
+        List<Appointment> appointments = appointmentRepository.findByPatient(patient);
+        for (Appointment apt : appointments) {
+            invoiceRepository.findByAppointment(apt).ifPresent(invoiceRepository::delete);
+            appointmentRepository.delete(apt);
+        }
+        patientRepository.delete(patient);
     }
 
     public PatientResponse mapToResponse(Patient patient) {

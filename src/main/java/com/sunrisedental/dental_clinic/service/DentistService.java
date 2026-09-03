@@ -3,8 +3,11 @@ package com.sunrisedental.dental_clinic.service;
 import com.sunrisedental.dental_clinic.dto.DentistRequest;
 import com.sunrisedental.dental_clinic.dto.DentistResponse;
 import com.sunrisedental.dental_clinic.exception.ResourceNotFoundException;
+import com.sunrisedental.dental_clinic.model.Appointment;
 import com.sunrisedental.dental_clinic.model.Dentist;
+import com.sunrisedental.dental_clinic.repository.AppointmentRepository;
 import com.sunrisedental.dental_clinic.repository.DentistRepository;
+import com.sunrisedental.dental_clinic.repository.InvoiceRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -15,9 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class DentistService {
 
     private final DentistRepository dentistRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final InvoiceRepository invoiceRepository;
 
-    public DentistService(DentistRepository dentistRepository) {
+    public DentistService(DentistRepository dentistRepository,
+                          AppointmentRepository appointmentRepository,
+                          InvoiceRepository invoiceRepository) {
         this.dentistRepository = dentistRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.invoiceRepository = invoiceRepository;
     }
 
     public DentistResponse createDentist(DentistRequest request) {
@@ -59,6 +68,17 @@ public class DentistService {
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+    }
+
+    public void deleteDentist(Long id) {
+        Dentist dentist = dentistRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Dentist not found with id: " + id));
+        List<Appointment> appointments = appointmentRepository.findByDentist(dentist);
+        for (Appointment apt : appointments) {
+            invoiceRepository.findByAppointment(apt).ifPresent(invoiceRepository::delete);
+            appointmentRepository.delete(apt);
+        }
+        dentistRepository.delete(dentist);
     }
 
     public DentistResponse mapToResponse(Dentist dentist) {

@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,12 @@ public class AppointmentController {
     @GetMapping("/{appointmentNumber}")
     public ResponseEntity<AppointmentResponse> getByAppointmentNumber(@PathVariable String appointmentNumber) {
         return ResponseEntity.ok(appointmentService.getByAppointmentNumber(appointmentNumber));
+    }
+
+    @DeleteMapping("/{appointmentNumber}")
+    public ResponseEntity<Void> deleteAppointment(@PathVariable String appointmentNumber) {
+        appointmentService.deleteAppointment(appointmentNumber);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/date/{date}")
