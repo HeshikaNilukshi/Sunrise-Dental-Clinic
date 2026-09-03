@@ -108,39 +108,124 @@ public class PageController {
         return "auth/login";
     }
 
-    @GetMapping("/register")
-    public String registerPage(Model model) {
+    @GetMapping("/staff")
+    public String listStaff(Model model) {
+        model.addAttribute("staffList", userService.getAllStaff());
+        model.addAttribute("pageTitle", "Staff Management");
+        return "staff/list";
+    }
+
+    @GetMapping("/staff/new")
+    public String newStaffForm(Model model) {
         if (!model.containsAttribute("registerRequest")) {
             model.addAttribute("registerRequest", new RegisterRequest());
         }
-        return "auth/register";
+        model.addAttribute("roles", com.sunrisedental.dental_clinic.model.enums.UserRole.values());
+        model.addAttribute("pageTitle", "Register Staff");
+        return "staff/form";
     }
 
-    @PostMapping("/register")
-    public String handleRegister(@Valid @ModelAttribute("registerRequest") RegisterRequest registerRequest,
+    @PostMapping("/staff")
+    public String registerStaff(@Valid @ModelAttribute("registerRequest") RegisterRequest registerRequest,
                                  BindingResult bindingResult,
                                  Model model,
                                  RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "auth/register";
+            model.addAttribute("roles", com.sunrisedental.dental_clinic.model.enums.UserRole.values());
+            model.addAttribute("pageTitle", "Register Staff");
+            return "staff/form";
         }
 
         if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
             bindingResult.rejectValue("confirmPassword", "error.registerRequest", "Passwords do not match");
-            return "auth/register";
+            model.addAttribute("roles", com.sunrisedental.dental_clinic.model.enums.UserRole.values());
+            model.addAttribute("pageTitle", "Register Staff");
+            return "staff/form";
         }
 
         try {
             userService.registerUser(registerRequest);
-            redirectAttributes.addFlashAttribute("successMessage", "Staff account registered successfully! Please sign in.");
-            return "redirect:/login?registered=true";
+            redirectAttributes.addFlashAttribute("successMessage", "Staff account registered successfully!");
+            return "redirect:/staff";
         } catch (DuplicateResourceException e) {
             bindingResult.rejectValue("email", "error.registerRequest", e.getMessage());
-            return "auth/register";
+            model.addAttribute("roles", com.sunrisedental.dental_clinic.model.enums.UserRole.values());
+            model.addAttribute("pageTitle", "Register Staff");
+            return "staff/form";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Failed to register account: " + e.getMessage());
-            return "auth/register";
+            model.addAttribute("roles", com.sunrisedental.dental_clinic.model.enums.UserRole.values());
+            model.addAttribute("pageTitle", "Register Staff");
+            return "staff/form";
         }
+    }
+
+    @GetMapping("/staff/{id}/edit")
+    public String editStaffForm(@PathVariable Long id, Model model) {
+        if (!model.containsAttribute("updateRequest")) {
+            com.sunrisedental.dental_clinic.dto.StaffResponse staff = userService.getStaffById(id);
+            com.sunrisedental.dental_clinic.dto.UpdateStaffRequest updateRequest = new com.sunrisedental.dental_clinic.dto.UpdateStaffRequest();
+            updateRequest.setFullName(staff.getFullName());
+            updateRequest.setEmail(staff.getEmail());
+            updateRequest.setRole(staff.getRole());
+            model.addAttribute("updateRequest", updateRequest);
+            model.addAttribute("staffId", staff.getId());
+        }
+        model.addAttribute("roles", com.sunrisedental.dental_clinic.model.enums.UserRole.values());
+        model.addAttribute("pageTitle", "Edit Staff");
+        return "staff/edit";
+    }
+
+    @PostMapping("/staff/{id}")
+    public String updateStaff(@PathVariable Long id,
+                              @Valid @ModelAttribute("updateRequest") com.sunrisedental.dental_clinic.dto.UpdateStaffRequest updateRequest,
+                              BindingResult bindingResult,
+                              Model model,
+                              RedirectAttributes redirectAttributes,
+                              java.security.Principal principal) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("roles", com.sunrisedental.dental_clinic.model.enums.UserRole.values());
+            model.addAttribute("pageTitle", "Edit Staff");
+            model.addAttribute("staffId", id);
+            return "staff/edit";
+        }
+
+        try {
+            userService.updateStaff(id, updateRequest, principal.getName());
+            redirectAttributes.addFlashAttribute("successMessage", "Staff account updated successfully!");
+            return "redirect:/staff";
+        } catch (org.springframework.security.access.AccessDeniedException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("roles", com.sunrisedental.dental_clinic.model.enums.UserRole.values());
+            model.addAttribute("pageTitle", "Edit Staff");
+            model.addAttribute("staffId", id);
+            return "staff/edit";
+        } catch (DuplicateResourceException e) {
+            bindingResult.rejectValue("email", "error.updateRequest", e.getMessage());
+            model.addAttribute("roles", com.sunrisedental.dental_clinic.model.enums.UserRole.values());
+            model.addAttribute("pageTitle", "Edit Staff");
+            model.addAttribute("staffId", id);
+            return "staff/edit";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Failed to update account: " + e.getMessage());
+            model.addAttribute("roles", com.sunrisedental.dental_clinic.model.enums.UserRole.values());
+            model.addAttribute("pageTitle", "Edit Staff");
+            model.addAttribute("staffId", id);
+            return "staff/edit";
+        }
+    }
+
+    @PostMapping("/staff/{id}/delete")
+    public String deleteStaff(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            userService.deleteStaff(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Staff account deleted successfully!");
+        } catch (org.springframework.security.access.AccessDeniedException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete account: " + e.getMessage());
+        }
+        return "redirect:/staff";
     }
 
     @GetMapping("/help")
@@ -246,10 +331,14 @@ public class PageController {
     @GetMapping("/appointments")
     public String listAppointments(@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                                    Model model) {
-        LocalDate queryDate = (date != null) ? date : LocalDate.now();
-        List<AppointmentResponse> appointments = appointmentService.getAppointmentsByDate(queryDate);
+        List<AppointmentResponse> appointments;
+        if (date != null) {
+            appointments = appointmentService.getAppointmentsByDate(date);
+        } else {
+            appointments = appointmentService.getAllAppointments();
+        }
         model.addAttribute("appointments", appointments);
-        model.addAttribute("selectedDate", queryDate);
+        model.addAttribute("selectedDate", date);
         model.addAttribute("today", LocalDate.now());
         model.addAttribute("pageTitle", "Appointments Schedule");
         return "appointments/list";

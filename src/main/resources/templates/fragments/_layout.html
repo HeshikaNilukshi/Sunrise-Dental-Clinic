@@ -101,14 +101,14 @@
                         <span>Search Appointment</span>
                     </a>
 
-                    <!-- Register Staff (Protected) -->
-                    <a th:href="@{/register}" sec:authorize="hasRole('ADMIN')"
-                       th:classappend="${activePage == 'register' ? 'bg-teal-50 text-teal-700 font-semibold shadow-xs' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'}"
+                    <!-- Staff Management (Protected) -->
+                    <a th:href="@{/staff}" sec:authorize="hasRole('ADMIN')"
+                       th:classappend="${activePage == 'staff' ? 'bg-teal-50 text-teal-700 font-semibold shadow-xs' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'}"
                        class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
                         </svg>
-                        <span>Register Staff</span>
+                        <span>Staff Management</span>
                     </a>
 
                     <!-- Help & Guide -->
@@ -166,12 +166,7 @@
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <a th:href="@{/appointments/new}" class="btn-primary">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                        </svg>
-                        <span>New Appointment</span>
-                    </a>
+                    <!-- Right header actions can be added here -->
                 </div>
             </header>
 

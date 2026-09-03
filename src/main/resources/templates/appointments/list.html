@@ -44,7 +44,7 @@
         </form>
         <div class="text-xs text-slate-500 font-medium">
             Showing <span class="font-bold text-slate-800" th:text="${#lists.size(appointments)}">0</span> appointments for 
-            <span class="font-semibold text-teal-700" th:text="${#temporals.format(selectedDate, 'MMMM d, yyyy')}">Date</span>
+            <span class="font-semibold text-teal-700" th:text="${selectedDate != null ? #temporals.format(selectedDate, 'MMMM d, yyyy') : 'All Dates'}">Date</span>
         </div>
     </div>
 
